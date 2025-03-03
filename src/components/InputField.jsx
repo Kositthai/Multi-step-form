@@ -1,8 +1,9 @@
 import { useTheme, TextField, InputLabel, Box } from '@mui/material';
 import * as yup from 'yup';
 import { PersonalSchema } from '../functions/PersonalInfoValidation';
+import { FormHelperText } from '@mui/material';
 
-function InputField({ info, step, setFormData, formData, errors, setErrors }) {
+function InputField({ info, setFormData, formData, errors, setErrors }) {
   const theme = useTheme();
   const { darkText } = theme.palette.customColors;
 
@@ -18,7 +19,7 @@ function InputField({ info, step, setFormData, formData, errors, setErrors }) {
   };
 
   return (
-    <Box key={info.id} sx={{ margin: '1rem 0' }}>
+    <Box key={info.id} sx={{ margin: '1rem 0', position: 'relative' }}>
       <InputLabel sx={{ color: darkText }}>{info.label}</InputLabel>
       <TextField
         placeholder={info.placeholder}
@@ -26,8 +27,14 @@ function InputField({ info, step, setFormData, formData, errors, setErrors }) {
         value={formData[info.label.toLowerCase()] || ''}
         onChange={(e) => handleChange(info.label.toLowerCase(), e.target.value)}
         error={!!errors[info.label.toLowerCase()]} // Show error if exists
-        helperText={errors[info.label.toLowerCase()]} // Display error message
+        aria-describedby="my-helper-text"
       />
+      <FormHelperText
+        id="my-helper-text"
+        style={{ position: 'absolute', top: 0, right: 0 }}
+      >
+        {errors[info.label.toLowerCase()]}
+      </FormHelperText>
     </Box>
   );
 }

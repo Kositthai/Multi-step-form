@@ -15,7 +15,7 @@ import { PersonalSchema } from './functions/PersonalInfoValidation';
 
 function App() {
   const theme = useTheme();
-  const { lightText, purplishBlue, darkText } = theme.palette.customColors;
+  const { lightText, purplishBlue } = theme.palette.customColors;
   const [step, setStep] = useState(0);
   const [plan, setPlan] = useState({
     selectPlan: null,
@@ -41,7 +41,6 @@ function App() {
     } catch (validationError) {
       // Convert Yup errors to object format
 
-      console.log(validationError.inner.path);
       const errorObj = {};
       validationError.inner.forEach((err) => {
         errorObj[err.path] = err.message;
@@ -49,8 +48,6 @@ function App() {
       setErrors(errorObj);
     }
   };
-
-  console.log(errors);
 
   const handleGoBack = () => {
     if (step <= 0) return;
