@@ -1,5 +1,4 @@
-import { Box, Card, Typography } from '@mui/material';
-import { useTheme } from '@emotion/react';
+import { Box, Card, Typography, useTheme } from '@mui/material';
 
 function CheckboxWithIcon({ info, handlePlan, plan, isToggled }) {
   const theme = useTheme();

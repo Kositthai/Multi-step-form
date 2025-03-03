@@ -1,7 +1,4 @@
-import { Box, FormControlLabel } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { Switch } from '@mui/material';
-import { useTheme } from '@mui/material';
+import { Box, FormControlLabel, Switch, useTheme } from '@mui/material';
 
 function TogglePlan({ handleToggle, isToggled }) {
   const theme = useTheme();

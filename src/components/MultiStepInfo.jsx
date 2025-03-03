@@ -1,16 +1,24 @@
-import { Card, Typography } from '@mui/material';
-import { Box } from '@mui/material';
-import { useTheme } from '@mui/material';
+import { Typography, Box, useTheme } from '@mui/material';
 import InputField from './InputField';
 import TogglePlan from './TogglePlan';
 import CheckboxWithCheckBox from './CheckboxWithCheckBox';
 import CheckboxWithIcon from './CheckboxWithIcon';
-import Overview from '../pages/Overview';
-import ThankYou from '../pages/ThankYou';
+import Header from './Header';
+import { useState } from 'react';
 
-function MultiStepInfo({ step, item, plan, setPlan, isToggled, handleToggle }) {
+function MultiStepInfo({
+  step,
+  item,
+  plan,
+  setPlan,
+  isToggled,
+  handleToggle,
+  formData,
+  setFormData,
+  errors = { errors },
+  setErrors = { setErrors },
+}) {
   const theme = useTheme();
-  const { darkText, lightText } = theme.palette.customColors;
 
   // maybe should set default value for plan information?
 
@@ -40,7 +48,14 @@ function MultiStepInfo({ step, item, plan, setPlan, isToggled, handleToggle }) {
     if (info?.type === 'text')
       return (
         <Box key={info.id}>
-          <InputField info={info} />
+          <InputField
+            info={info}
+            step={step}
+            setFormData={setFormData}
+            formData={formData}
+            errors={errors}
+            setErrors={setErrors}
+          />
         </Box>
       );
     else if (info?.type === 'checkbox_1')
@@ -69,19 +84,10 @@ function MultiStepInfo({ step, item, plan, setPlan, isToggled, handleToggle }) {
         </Box>
       );
   };
-  console.log({ step });
 
   return (
     <>
-      <Box sx={{ marginBottom: '1rem' }}>
-        <Typography variant="h5" sx={{ color: darkText, fontWeight: '600' }}>
-          {item.title}
-        </Typography>
-        <Typography variant="subtitle1" sx={{ color: lightText }}>
-          {item.description}
-        </Typography>
-      </Box>
-
+      <Header title={item.title} description={item.description} />
       <Box
         sx={{
           display: step == 1 ? { xs: 'block', md: 'flex' } : 'block',
@@ -96,7 +102,6 @@ function MultiStepInfo({ step, item, plan, setPlan, isToggled, handleToggle }) {
         <TogglePlan handleToggle={handleToggle} isToggled={isToggled} />
       )}
     </>
-    // </Card>
   );
 }
 

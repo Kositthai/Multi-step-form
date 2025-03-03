@@ -1,11 +1,11 @@
-import data from '../data/personalInfo';
-import { Box, Typography } from '@mui/material';
-import { Checkbox } from '@mui/material';
-import { FormGroup } from '@mui/material';
-import { FormControlLabel } from '@mui/material';
-import { Grid2 } from '@mui/material';
-import { useTheme } from '@mui/material';
-import { Card } from '@mui/material';
+import {
+  Typography,
+  Checkbox,
+  FormControlLabel,
+  Grid2,
+  useTheme,
+  Card,
+} from '@mui/material';
 
 function CheckboxWithCheckBox({ info, handleAddOns, plan }) {
   const theme = useTheme();

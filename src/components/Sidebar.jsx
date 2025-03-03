@@ -3,6 +3,14 @@ import Step from './Step';
 import stepInfo from '../data/stepInfo';
 
 const Sidebar = ({ step }) => {
+  const handleStepCount = () => {
+    if (step === stepInfo.length) {
+      return step;
+    } else {
+      return step + 1;
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -18,7 +26,7 @@ const Sidebar = ({ step }) => {
           gap: { xs: '.5rem', md: '1.5rem' },
         }}
       >
-        <Step stepInfo={stepInfo} stepCount={step + 1} />{' '}
+        <Step stepInfo={stepInfo} stepCount={handleStepCount()} />{' '}
       </Box>
     </Box>
   );

@@ -16,13 +16,13 @@ const response = [
 
       {
         id: 1,
-        label: 'Email Address',
+        label: 'Email',
         placeholder: 'e.g. stephenking@lorem.com',
         type: 'text',
       },
       {
         id: 2,
-        label: 'Phone Number',
+        label: 'Phone',
         placeholder: 'e.g. +1 234 567 890',
         type: 'text',
       },

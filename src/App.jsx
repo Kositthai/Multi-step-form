@@ -1,17 +1,17 @@
 import React from 'react';
 import Sidebar from './components/Sidebar';
 import MultiStepInfo from './components/MultiStepInfo';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Card } from '@mui/material';
 import { useState } from 'react';
 import data from './data/personalInfo';
 import { useTheme } from '@emotion/react';
 import ThankYou from './pages/ThankYou';
-import { Card } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-
+import Header from './components/Header';
 import sidebarMobile from './assets/images/bg-sidebar-mobile.svg';
 import sidebarDesktop from './assets/images/bg-sidebar-desktop.svg';
 import Overview from './pages/Overview';
+import { PersonalSchema } from './functions/PersonalInfoValidation';
 
 function App() {
   const theme = useTheme();
@@ -23,14 +23,34 @@ function App() {
     subscription: 'monthly',
   });
   const [isToggled, setIsToggled] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+  });
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step > 0) {
       if (!plan.selectPlan) return;
     }
 
-    setStep((prevStep) => prevStep + 1);
+    try {
+      await PersonalSchema.validate(formData, { abortEarly: false });
+      setStep((prev) => prev + 1); // Only go to next step if validation passes
+    } catch (validationError) {
+      // Convert Yup errors to object format
+
+      console.log(validationError.inner.path);
+      const errorObj = {};
+      validationError.inner.forEach((err) => {
+        errorObj[err.path] = err.message;
+      });
+      setErrors(errorObj);
+    }
   };
+
+  console.log(errors);
 
   const handleGoBack = () => {
     if (step <= 0) return;
@@ -45,25 +65,6 @@ function App() {
       subscription: isToggled ? 'monthly' : 'yearly', // instead of passing is toggle boolean value, make a condition to return string
     }));
   };
-
-  const steps = [
-    ...data.map((item) => (
-      <MultiStepInfo
-        step={step}
-        item={item}
-        plan={plan}
-        setPlan={setPlan}
-        isToggled={isToggled}
-        setIsToggled={setIsToggled}
-        handleToggle={handleToggle}
-      />
-    )),
-    <Overview plan={plan} />, // Step 4
-
-    <ThankYou />, // Step 6
-  ];
-
-  console.log(steps);
 
   return (
     <Box
@@ -125,33 +126,16 @@ function App() {
                   padding: { xs: '1.5rem', md: '4rem' },
                 }}
               >
-                {/* {step === data.length + 1 ? (
-                  <ThankYou />
-                ) : step === data.legth ? (
-                  <Overview plan={plan} />
-                ) : (
-                  <Box>
-                    {data.map(
-                      (item, index) =>
-                        index === step && ( // only return the item that matches the condition
-                          <MultiStepInfo
-                            step={step}
-                            item={item}
-                            plan={plan}
-                            setPlan={setPlan}
-                            isToggled={isToggled}
-                            setIsToggled={setIsToggled}
-                            handleToggle={handleToggle}
-                          />
-                        )
-                    )}
-                  </Box>
-                )} */}
-
                 {step === data.length + 1 ? (
                   <ThankYou />
                 ) : step === data.length ? (
-                  <Overview plan={plan} />
+                  <>
+                    <Header
+                      title="Finishing up"
+                      description="Double-check everything looks OK before confirming."
+                    />
+                    <Overview plan={plan} />
+                  </>
                 ) : (
                   <MultiStepInfo
                     step={step}
@@ -161,6 +145,10 @@ function App() {
                     isToggled={isToggled}
                     setIsToggled={setIsToggled}
                     handleToggle={handleToggle}
+                    formData={formData}
+                    setFormData={setFormData}
+                    errors={errors}
+                    setErrors={setErrors}
                   />
                 )}
               </Card>
@@ -173,7 +161,7 @@ function App() {
                 margin: '1rem',
               }}
             >
-              {step > 0 ? (
+              {step < data.length + 1 && step > 0 ? (
                 <Box
                   variant="contained"
                   onClick={handleGoBack}
@@ -189,17 +177,6 @@ function App() {
                 <Box></Box>
               )}
 
-              {/* <Button
-                variant="contained"
-                onClick={handleNextStep}
-                sx={{
-                  background:
-                    step === data.length - 1 ? purplishBlue : darkText,
-                  textTransform: 'capitalize',
-                }}
-              >
-                {step === 3 ? 'Confirm' : 'Next'}
-              </Button> */}
               {step < data.length + 1 && (
                 <Button
                   variant="contained"
